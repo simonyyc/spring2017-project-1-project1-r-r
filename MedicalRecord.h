@@ -6,16 +6,31 @@
 
 using namespace std;
 
+// structure for implementhing linked list
+struct Node {
+	// Variable to store baby information 
+	Baby baby;
+	// A next pointer for linked list
+	Node * next;
+};
 class MedicalRecord {
 public:
 	// default constructor
 	MedicalRecord() {
-		// TO BE COMPLETED
+		head = Null;
+		birthCount = 0;
 	}
 
 	// destructor
 	~MedicalRecord() {
-		// TO BE COMPLETED
+		// Deleting all pointers / records
+		while(head)
+		{
+			Node * current = head;
+			head = head->next;
+			delete current;
+		}
+		
 	}
 
 	// Load information from a text file with the given filename.
