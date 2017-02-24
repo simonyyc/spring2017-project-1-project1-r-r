@@ -144,6 +144,9 @@ private:
 
 	// Add private member variables for your data structure along with any 
 	// other variables required to implement the public member functions
+
+	// Starting point of linked list
 	Node * head;
+	// Count of total nodes / babies	
 	int birthCount;
 };
