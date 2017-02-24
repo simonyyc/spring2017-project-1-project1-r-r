@@ -87,22 +87,63 @@ public:
 	}
 
 	// return the number of babies who had birth weight < 2500 grams
-	int numberOfBabiesWithLowBirthWeight() {
-		return -1; // TO BE COMPLETED
+	int numberOfBabiesWithLowBirthWeight(string s) {
+		Node * current = head;
+		int lowWeight = 0;
+		while(current)
+		{
+			if(current->baby.getWeight() < 2500)
+				lowWeight++;
+			current = current->next;
+		}
+		// Babies with lower weight
+		return lowWeight; 
 	}
 
 	// return the number of babies who have the name contained in string s
 	int numberOfBabiesWithName(string s) {
-		return -1; // TO BE COMPLETED
+		Node * current = head;
+		int babyName = 0;
+		while(current)
+		{
+			if(current->baby.getName().compare(s) == 0)
+				babyName++;
+			current = current->next;
+		}
+		// Babies with given name
+		return babyName; 
 	}
 
 private:
 	// update the data structure with information contained in Baby object
 	void addEntry(Baby b) {
-		// TO BE COMPLETED
+		Node * newNode = new Node;
+		newNode->baby = b;
+		newNode->next = NULL;
+		birthCount++;
+		// If list is empty
+		if(head == NULL)
+		{
+			head = newNode;
+		}
+		else
+		{
+			Node * current = head;
+			while(current)
+			{
+				// Find last item in list
+				if(current->next == NULL)
+				{
+					current->next = newNode;
+					return;
+				}
+				current = current->next;
+			}
+		}
 	}
 
 	// Add private member variables for your data structure along with any 
 	// other variables required to implement the public member functions
-
+	Node * head;
+	int birthCount;
 };
