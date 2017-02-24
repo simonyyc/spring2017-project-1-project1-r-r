@@ -10,17 +10,18 @@ public:
 	};
 
 	Baby(string s, int w) { // constructor
-		// TO BE COMPLETED
+		name = s;
+		weight = w;
 	}
 
 	// a "getter" method
 	int getWeight() {
-		return -1; // TO BE COMPLETED
+		return weight; 
 	}
 
 	// a "getter" method
 	string getName() {
-		return "COMPLETE ME"; // TO BE COMPLETED
+		return name;
 	}
 
 private:
