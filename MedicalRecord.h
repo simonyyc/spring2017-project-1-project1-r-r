@@ -54,12 +54,36 @@ public:
 
 	// return the most frequently appearing name in the text file
 	string mostPopularName() {
-		return "COMPLETE ME"; // TO BE COMPLETED
+		Node * current = head;
+		// Temporary stored name
+		string popularName = "";
+		// Storing count of most popular name
+		int popularCount = 0;
+		while(current)
+			// Temporary stored name
+			string tempNaame = current->baby.getName();
+			// Temporary storing count for comparison
+			int tempCount = 0;
+			// Checking all names in list
+			if(popularCount == 0 || temp.compare(popularNama) != 0) {
+				// Calling function to get no. of babies with name
+				tempCount = numberOfBabiesWithName(tempName);
+				// Updating popular Name and Count if new popular is found
+				if(tempCount > popularCount) {
+					popularCount = tempCount;
+					popularName = tempName;
+				}
+			}
+			current = current->next;
+		}
+				
+		// Most popular name		
+		return popularName;
 	}
 
 	// return the number of baby records loaded from the text file
 	int numberOfBirths() {
-		return -1; // TO BE COMPLETED
+		return birthCount; 
 	}
 
 	// return the number of babies who had birth weight < 2500 grams
