@@ -1,36 +1,25 @@
 #pragma once
 #include <string>
 #include <stdexcept>
-
+#include <fstream>
 #include "Baby.h"
-
+#include <iostream>
 using namespace std;
 
-// structure for implementhing linked list
-struct Node {
-	// Variable to store baby information 
-	Baby baby;
-	// A next pointer for linked list
-	Node * next;
-};
 class MedicalRecord {
 public:
 	// default constructor
 	MedicalRecord() {
-		head = Null;
-		birthCount = 0;
+		cout << "Enter maximum number of entries allowed: ";
+		cin >> maxData;
+		babyData = new Baby[maxData];
+		numOfBirths = 0;
 	}
 
 	// destructor
 	~MedicalRecord() {
 		// Deleting all pointers / records
-		while(head)
-		{
-			Node * current = head;
-			head = head->next;
-			delete current;
-		}
-		
+		delete[] babyData;
 	}
 
 	// Load information from a text file with the given filename.
@@ -42,7 +31,7 @@ public:
 			string name;
 			int weight;
 			while (myfile >> name >> weight) {
-				// cout << name << " " << weight << endl;
+			//	cout << name << " " << weight << endl;
 				Baby b(name, weight);
 				addEntry(b);
 			}
@@ -54,99 +43,62 @@ public:
 
 	// return the most frequently appearing name in the text file
 	string mostPopularName() {
-		Node * current = head;
-		// Temporary stored name
-		string popularName = "";
-		// Storing count of most popular name
-		int popularCount = 0;
-		while(current)
-			// Temporary stored name
-			string tempNaame = current->baby.getName();
-			// Temporary storing count for comparison
-			int tempCount = 0;
-			// Checking all names in list
-			if(popularCount == 0 || temp.compare(popularNama) != 0) {
-				// Calling function to get no. of babies with name
-				tempCount = numberOfBabiesWithName(tempName);
-				// Updating popular Name and Count if new popular is found
-				if(tempCount > popularCount) {
-					popularCount = tempCount;
-					popularName = tempName;
-				}
+		int maxNameCount = 0, previousMax = 0;
+		string maxName;
+		for (int i = 0; i < numOfBirths; i++) {
+			for (int j = 0; j < numOfBirths; j++) {
+				if (babyData[i].getName() == babyData[j].getName()) {
+					maxNameCount++;
+				}//two for loops to check for matching names; matched names cause counter to increment
 			}
-			current = current->next;
+			if (maxNameCount > previousMax) {
+				maxName = babyData[i].getName();
+				previousMax = maxNameCount;
+				maxNameCount = 0;
+			}//check to see if previous most popular name will be overridden
+	
 		}
-				
-		// Most popular name		
-		return popularName;
+		return maxName;
 	}
 
 	// return the number of baby records loaded from the text file
 	int numberOfBirths() {
-		return birthCount; 
+		return numOfBirths; // TO BE COMPLETED
 	}
 
 	// return the number of babies who had birth weight < 2500 grams
-	int numberOfBabiesWithLowBirthWeight(string s) {
-		Node * current = head;
-		int lowWeight = 0;
-		while(current)
-		{
-			if(current->baby.getWeight() < 2500)
-				lowWeight++;
-			current = current->next;
+	int numberOfBabiesWithLowBirthWeight() {
+		int lowBirthWeight = 0;
+		for (int i = 0; i < numOfBirths; i++) {
+			if (babyData[i].getWeight() < 2500) {
+				lowBirthWeight++;
+			}
 		}
-		// Babies with lower weight
-		return lowWeight; 
+		return lowBirthWeight;
 	}
 
 	// return the number of babies who have the name contained in string s
 	int numberOfBabiesWithName(string s) {
-		Node * current = head;
-		int babyName = 0;
-		while(current)
-		{
-			if(current->baby.getName().compare(s) == 0)
-				babyName++;
-			current = current->next;
+		int nameCount = 0;
+		for (int i = 0; i < numOfBirths; i++) {
+			if (babyData[i].getName() == s)
+				nameCount++;
 		}
-		// Babies with given name
-		return babyName; 
+		return nameCount;
 	}
 
 private:
 	// update the data structure with information contained in Baby object
 	void addEntry(Baby b) {
-		Node * newNode = new Node;
-		newNode->baby = b;
-		newNode->next = NULL;
-		birthCount++;
-		// If list is empty
-		if(head == NULL)
-		{
-			head = newNode;
-		}
-		else
-		{
-			Node * current = head;
-			while(current)
-			{
-				// Find last item in list
-				if(current->next == NULL)
-				{
-					current->next = newNode;
-					return;
-				}
-				current = current->next;
-			}
-		}
+		babyData[numOfBirths] = b;
+		numOfBirths++;	
 	}
 
 	// Add private member variables for your data structure along with any 
 	// other variables required to implement the public member functions
-
-	// Starting point of linked list
-	Node * head;
-	// Count of total nodes / babies	
-	int birthCount;
+	
+	int numOfBirths; 	//use counter in addEntry to determine
+	Baby * babyData; 	//points to dynamic memory array holding the objects
+	int maxData; 		//holds inputted value of maximum entries
+	
 };
