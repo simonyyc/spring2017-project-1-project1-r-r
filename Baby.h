@@ -4,24 +4,31 @@
 using namespace std;
 
 // class that contains information related to a single birth or baby name
-class Baby {
+class Baby
+{
 public:
-	Baby() {  // default constructor
+	Baby()
+	{ // default constructor
+		name = "";
+		weight = 0;
 	};
 
-	Baby(string s, int w) { // constructor
+	Baby(string s, int w)
+	{ // constructor
 		name = s;
 		weight = w;
 	}
 
 	// a "getter" method
-	int getWeight() {
+	int getWeight()
+	{
 		return weight; 
 	}
 
 	// a "getter" method
-	string getName() {
-		return name;
+	string getName()
+	{
+		return name; 
 	}
 
 private:
