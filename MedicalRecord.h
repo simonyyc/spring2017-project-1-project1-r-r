@@ -3,34 +3,15 @@
 #include <stdexcept>
 #include <fstream>
 #include "Baby.h"
-#include <iostream>
-
 using namespace std;
-
-// A structure for implementing linked list
-struct Node {
-	Baby baby;																// Variable to store baby information
-	Node * next;															// A next pointer for linked list
-};
 
 class MedicalRecord {
 public:
 	// default constructor
-	MedicalRecord() {
-		head = NULL;
-		birthCount = 0;
-	}
+	MedicalRecord();
 
 	// destructor
-	~MedicalRecord() {
-		// Deleting all pointers / records
-		while(head)
-		{
-			Node * current = head;
-			head = head->next;
-			delete current;
-		}
-	}
+	~MedicalRecord();
 
 	// Load information from a text file with the given filename.
 	void buildMedicalRecordfromDatafile(string filename) {
@@ -41,7 +22,7 @@ public:
 			string name;
 			int weight;
 			while (myfile >> name >> weight) {
-			//	cout << name << " " << weight << endl;
+				// cout << name << " " << weight << endl;
 				Baby b(name, weight);
 				addEntry(b);
 			}
@@ -52,91 +33,79 @@ public:
 	}
 
 	// return the most frequently appearing name in the text file
-	string mostPopularName() {
-		Node * current = head;
-		string popularName = "";					// Most popular name
-		int popularCount = 0;						// Storing count of most popular name
-		while(current)
-		{
-			string tempName = current->baby.getName();				// Temporary stored name
-			int tempCount = 0;						// Temporary storing count for comparison
-			// Checking all names in list
-			if(popularCount == 0 || tempName.compare(popularName) != 0) {
-				tempCount = numberOfBabiesWithName(tempName);		// Calling function to get no. of babies with name
-				// Updating popular Name and Count if new popular is found
-				if(tempCount > popularCount) {
-					popularCount = tempCount;
-					popularName = tempName;
-				}
-			}
-			current = current->next;
-		}
-		return popularName; // Most popular name
-	}
+	string mostPopularName();
 
 	// return the number of baby records loaded from the text file
-	int numberOfBirths() {
-		return birthCount; // TO BE COMPLETED
-	}
+	int numberOfBirths();
 
 	// return the number of babies who had birth weight < 2500 grams
-	int numberOfBabiesWithLowBirthWeight() {
-		Node * current = head;
-		int lowWeight = 0;
-		while(current)
-		{
-			if(current->baby.getWeight() < 2500)
-				lowWeight++;
-			current = current->next;
-		}
-		return lowWeight; // Babies with lower weight
-	}
+	int numberOfBabiesWithLowBirthWeight();
 
 	// return the number of babies who have the name contained in string s
-	int numberOfBabiesWithName(string s) {
-		Node * current = head;
-		int babyName = 0;
-		while(current)
-		{
-			if(current->baby.getName().compare(s) == 0)
-				babyName++;
-			current = current->next;
-		}
-		return babyName; // Babies with given name
-	}
-
+	int numberOfBabiesWithName(string s);
 private:
 	// update the data structure with information contained in Baby object
-	void addEntry(Baby b) {
-		Node * newNode = new Node;
-		newNode->baby = b;
-		newNode->next = NULL;
-		birthCount++;
-		// If list is empty
-		if(head == NULL)
-		{
-			head = newNode;
+	void addEntry(Baby b);
+	int numOfBirths; //use counter in addEntry to determine
+	Baby* dataKeep; //points to dynamic memory array holding the objects
+	int maxBirth; //holds inputted value of maximum entries
+
+
+};
+
+MedicalRecord::MedicalRecord() {
+	maxBirth = 100000;
+	dataKeep = new Baby[maxBirth];
+	numOfBirths = 0;
+}//ask user to input maximum number
+
+MedicalRecord::~MedicalRecord() {
+	delete[] dataKeep;
+}//delete the array
+
+string MedicalRecord::mostPopularName() {
+	int maxNameCount = 0, previousMax = 0;
+	string maxName;
+	for (int i = 0; i < numOfBirths; i++) {
+		for (int j = 0; j < numOfBirths; j++) {
+			if (dataKeep[i].getName() == dataKeep[j].getName()) {
+				maxNameCount++;
+			}//two for loops to check for matching names; matched names cause counter to increment
 		}
-		else
-		{
-			Node * current = head;
-			while(current)
-			{
-				// Find last item in list
-				if(current->next == NULL)
-				{
-					current->next = newNode;
-					return;
-				}
-				current = current->next;
-			}
+		if (maxNameCount > previousMax) {
+			maxName = dataKeep[i].getName();
+			previousMax = maxNameCount;
+			maxNameCount = 0;
+		}//check to see if previous most popular name will be overridden
+
+	}
+	return maxName;
+}
+
+int MedicalRecord::numberOfBirths() {
+	return numOfBirths;
+}//return the numOfBirths based on number of entries added into array
+
+int MedicalRecord::numberOfBabiesWithLowBirthWeight() {
+	int lowBirthWeight = 0;
+	for (int i = 0; i < numOfBirths; i++) {
+		if (dataKeep[i].getWeight() < 2500) {
+			lowBirthWeight++;
 		}
 	}
+	return lowBirthWeight;
+}//loop to see if weight matches criteria
 
-	// Add private member variables for your data structure along with any 
-	// other variables required to implement the public member functions
-	
-	Node * head;															// Starting point of linked list
-	int birthCount;															// Count of total nodes / babies
-	
-};
+int MedicalRecord::numberOfBabiesWithName(string s) {
+	int numSameName = 0;
+	for (int i = 0; i < numOfBirths; i++) {
+		if (dataKeep[i].getName() == s)
+			numSameName++;
+	}
+	return numSameName;
+}//loop to see if name matches criteria
+
+void MedicalRecord::addEntry(Baby b) {
+	dataKeep[numOfBirths] = b;
+	numOfBirths++;
+}
